@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Editar productor{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Editar productor</h1>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-6"><label class="form-label">Nombres</label><input class="form-control" name="nombres" value="{{ productor.nombres }}" required></div>
+            <div class="col-md-6"><label class="form-label">Documento</label><input class="form-control" name="documento" value="{{ productor.documento or '' }}"></div>
+            <div class="col-md-6"><label class="form-label">Teléfono</label><input class="form-control" name="telefono" value="{{ productor.telefono or '' }}"></div>
+            <div class="col-md-6"><label class="form-label">Dirección</label><input class="form-control" name="direccion" value="{{ productor.direccion or '' }}"></div>
+            <div class="col-md-6"><label class="form-label">Municipio</label><input class="form-control" name="municipio" value="{{ productor.municipio }}"></div>
+            <div class="col-12">
+                <button class="btn btn-cacao">Actualizar</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('main.productores') }}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

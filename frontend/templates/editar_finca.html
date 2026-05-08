@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Editar finca - CacaoTrace{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Editar finca</h1>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-6"><label class="form-label">Nombre finca</label><input class="form-control" name="nombre" value="{{ finca.nombre }}" required></div>
+            <div class="col-md-6"><label class="form-label">Productor</label><select class="form-select" name="productor_id" required>{% for productor in productores %}<option value="{{ productor.id }}" {% if finca.productor_id == productor.id %}selected{% endif %}>{{ productor.nombres }}</option>{% endfor %}</select></div>
+            <div class="col-md-6"><label class="form-label">Vereda</label><input class="form-control" name="vereda" value="{{ finca.vereda or '' }}"></div>
+            <div class="col-md-6"><label class="form-label">Municipio</label><input class="form-control" name="municipio" value="{{ finca.municipio }}"></div>
+            <div class="col-md-6"><label class="form-label">Hectáreas</label><input class="form-control" type="number" step="0.01" name="hectareas" value="{{ finca.hectareas or '' }}"></div>
+            <div class="col-12"><button class="btn btn-cacao">Actualizar finca</button><a class="btn btn-outline-secondary" href="{{ url_for('main.fincas') }}">Cancelar</a></div>
+        </form>
+    </div>
+</div>
+{% endblock %}

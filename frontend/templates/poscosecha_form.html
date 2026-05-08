@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{% if proceso %}Editar poscosecha{% else %}Registrar poscosecha{% endif %}{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">{% if proceso %}Editar proceso poscosecha{% else %}Proceso poscosecha{% endif %} - {{ lote.codigo }}</h1>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-4"><label class="form-label">Fermentación</label><select class="form-select" name="fermentacion" required><option value="">Seleccione...</option>{% for f in ['No iniciada','En proceso','Finalizada'] %}<option value="{{ f }}" {% if proceso and proceso.fermentacion == f %}selected{% endif %}>{{ f }}</option>{% endfor %}</select></div>
+            <div class="col-md-4"><label class="form-label">Secado</label><select class="form-select" name="secado" required><option value="">Seleccione...</option>{% for s in ['No iniciado','En proceso','Finalizado'] %}<option value="{{ s }}" {% if proceso and proceso.secado == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+            <div class="col-md-4"><label class="form-label">Estado del lote</label><select class="form-select" name="estado_proceso" required><option value="">Seleccione...</option>{% for e in ['Fermentación','Secado','Inventario','Vendido'] %}<option value="{{ e }}" {% if proceso and proceso.estado_proceso == e %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div>
+            <div class="col-12"><label class="form-label">Observaciones</label><textarea class="form-control" name="observaciones" rows="4">{{ proceso.observaciones if proceso else '' }}</textarea></div>
+            <div class="col-12"><button class="btn btn-cacao">{% if proceso %}Actualizar poscosecha{% else %}Guardar poscosecha{% endif %}</button><a class="btn btn-outline-secondary" href="{{ url_for('main.detalle_lote', lote_id=lote.id) }}">Cancelar</a></div>
+        </form>
+    </div>
+</div>
+{% endblock %}

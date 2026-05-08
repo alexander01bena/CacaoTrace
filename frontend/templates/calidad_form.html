@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{% if control %}Editar calidad{% else %}Registrar calidad{% endif %}{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">{% if control %}Editar control de calidad{% else %}Control de calidad{% endif %} - {{ lote.codigo }}</h1>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-4"><label class="form-label">Humedad (%)</label><input class="form-control" type="number" step="0.01" min="0" name="humedad" value="{{ control.humedad if control else '' }}" required></div>
+            <div class="col-md-4"><label class="form-label">Estado del grano</label><select class="form-select" name="estado_grano" required><option value="">Seleccione...</option>{% for e in ['Bueno','Regular','Malo'] %}<option value="{{ e }}" {% if control and control.estado_grano == e %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div>
+            <div class="col-md-4"><label class="form-label">Clasificación</label><select class="form-select" name="clasificacion" required><option value="">Seleccione...</option>{% for c in ['Calidad alta','Calidad media','Calidad baja','Rechazado'] %}<option value="{{ c }}" {% if control and control.clasificacion == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+            <div class="col-12"><label class="form-label">Observaciones</label><textarea class="form-control" name="observaciones" rows="4">{{ control.observaciones if control else '' }}</textarea></div>
+            <div class="col-12"><button class="btn btn-cacao">{% if control %}Actualizar calidad{% else %}Guardar calidad{% endif %}</button><a class="btn btn-outline-secondary" href="{{ url_for('main.detalle_lote', lote_id=lote.id) }}">Cancelar</a></div>
+        </form>
+    </div>
+</div>
+{% endblock %}

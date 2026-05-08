@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Consultar lote - CacaoTrace{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <h1 class="h3 fw-bold">Consultar lote por código</h1>
+                <p class="text-muted">Permite ver la trazabilidad básica de un lote sin modificar la información.</p>
+                <form method="post" class="d-flex gap-2">
+                    <input class="form-control" name="codigo" placeholder="Ejemplo: LOT-2026-0001" value="{{ codigo }}" required>
+                    <button class="btn btn-cacao">Consultar</button>
+                </form>
+            </div>
+        </div>
+        {% if lote %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Resultado</div>
+            <div class="card-body">
+                <h2 class="h4">{{ lote.codigo }}</h2>
+                <p><strong>Productor:</strong> {{ lote.productor.nombres }}</p>
+                <p><strong>Finca:</strong> {{ lote.finca.nombre }}</p>
+                <p><strong>Kg inicial:</strong> {{ lote.cantidad_inicial_kg }} | <strong>Kg actual:</strong> {{ lote.cantidad_actual_kg }}</p>
+                <p><strong>Estado:</strong> {{ lote.estado }}</p>
+                <p><strong>Fecha de creación:</strong> {{ lote.fecha_creacion.strftime('%Y-%m-%d') }}</p>
+                <hr>
+                <h3 class="h6 fw-bold">Último control de calidad</h3>
+                {% if lote.controles_calidad %}
+                    {% set control = lote.controles_calidad[-1] %}
+                    <p class="mb-1"><strong>Clasificación:</strong> {{ control.clasificacion }}</p>
+                    <p class="mb-1"><strong>Humedad:</strong> {{ control.humedad }}%</p>
+                    <p class="mb-1"><strong>Estado del grano:</strong> {{ control.estado_grano }}</p>
+                {% else %}
+                    <p class="text-muted">Este lote aún no tiene control de calidad registrado.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

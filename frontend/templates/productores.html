@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Productores - CacaoTrace{% endblock %}
+
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Productores de cacao</h1>
+
+<div class="row g-4">
+
+    <!-- Formulario para registrar productor -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">
+                Registrar productor
+            </div>
+
+            <div class="card-body">
+                <form method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombres</label>
+                        <input
+                            class="form-control"
+                            name="nombres"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Documento</label>
+                        <input
+                            class="form-control"
+                            name="documento">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input
+                            class="form-control"
+                            name="telefono">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <input
+                            class="form-control"
+                            name="direccion">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Municipio</label>
+                        <input
+                            class="form-control"
+                            name="municipio"
+                            value="San Andrés de Tumaco">
+                    </div>
+
+                    <button class="btn btn-cacao w-100">
+                        Guardar productor
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de productores -->
+    <div class="col-md-8">
+
+        <form class="d-flex mb-3" method="get">
+            <input
+                class="form-control me-2"
+                name="buscar"
+                placeholder="Buscar por nombre o documento"
+                value="{{ buscar }}">
+
+            <button class="btn btn-outline-cacao">
+                Buscar
+            </button>
+        </form>
+
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Documento</th>
+                            <th>Teléfono</th>
+                            <th>Municipio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for productor in productores %}
+                        <tr>
+                            <td>{{ productor.nombres }}</td>
+                            <td>{{ productor.documento or 'Sin dato' }}</td>
+                            <td>{{ productor.telefono or 'Sin dato' }}</td>
+                            <td>{{ productor.municipio }}</td>
+
+                            <td class="d-flex gap-1">
+
+                                <a
+                                    class="btn btn-sm btn-outline-cacao"
+                                    href="{{ url_for('main.editar_productor', productor_id=productor.id) }}">
+                                    Editar
+                                </a>
+
+                                {% if current_user.role.name == 'administrador' %}
+                                <form
+                                    method="post"
+                                    action="{{ url_for('main.eliminar_productor', productor_id=productor.id) }}"
+                                    onsubmit="return confirm('¿Está seguro de eliminar este productor? También se eliminarán sus fincas, recepciones, lotes y todos los datos asociados. Esta acción no se puede deshacer.');">
+
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        Eliminar
+                                    </button>
+
+                                </form>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No hay productores registrados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

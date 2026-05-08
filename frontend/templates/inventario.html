@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Inventario - CacaoTrace{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Inventario de lotes</h1>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Registrar movimiento</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3"><label class="form-label">Lote</label><select class="form-select" name="lote_id" required><option value="">Seleccione...</option>{% for lote in lotes %}<option value="{{ lote.id }}">{{ lote.codigo }} - {{ lote.cantidad_actual_kg }} kg</option>{% endfor %}</select></div>
+                    <div class="mb-3"><label class="form-label">Tipo</label><select class="form-select" name="tipo" required><option>Entrada</option><option>Salida</option><option>Ajuste</option></select></div>
+                    <div class="mb-3"><label class="form-label">Cantidad kg</label><input class="form-control" type="number" step="0.01" min="0.01" name="cantidad_kg" required></div>
+                    <div class="mb-3"><label class="form-label">Motivo</label><input class="form-control" name="motivo" placeholder="Venta, ajuste, merma, devolución..."></div>
+                    <button class="btn btn-cacao w-100">Guardar movimiento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-header bg-white fw-bold">Lotes disponibles</div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead><tr><th>Código</th><th>Productor</th><th>Kg actual</th><th>Estado</th><th></th></tr></thead>
+                    <tbody>
+                    {% for lote in lotes %}<tr><td>{{ lote.codigo }}</td><td>{{ lote.productor.nombres }}</td><td>{{ lote.cantidad_actual_kg }}</td><td>{{ lote.estado }}</td><td><a class="btn btn-sm btn-outline-cacao" href="{{ url_for('main.detalle_lote', lote_id=lote.id) }}">Ver</a></td></tr>{% else %}<tr><td colspan="5" class="text-muted text-center py-4">No hay lotes.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Últimos movimientos</div>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Fecha</th><th>Lote</th><th>Tipo</th><th>Kg</th><th>Motivo</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                    {% for mov in movimientos %}
+                    <tr>
+                        <td>{{ mov.fecha_movimiento.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ mov.lote.codigo }}</td><td>{{ mov.tipo }}</td><td>{{ mov.cantidad_kg }}</td><td>{{ mov.motivo }}</td>
+                        <td class="d-flex gap-1">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.editar_movimiento', movimiento_id=mov.id) }}">Editar</a>
+                            {% if current_user.role.name == 'administrador' %}
+                            <form method="post" action="{{ url_for('main.eliminar_movimiento', movimiento_id=mov.id) }}" onsubmit="return confirm('¿Eliminar este movimiento? Se recalculará el inventario.');">
+                                <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}<tr><td colspan="6" class="text-muted text-center py-4">Sin movimientos.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
