@@ -17,43 +17,53 @@
                 <form method="post">
 
                     <div class="mb-3">
-                        <label class="form-label">Nombres</label>
+                        <label class="form-label" for="nombres">Nombres</label>
                         <input
                             class="form-control"
+                            id="nombres"
                             name="nombres"
-                            required>
+                            required
+                        >
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Documento</label>
+                        <label class="form-label" for="documento">Documento</label>
                         <input
                             class="form-control"
-                            name="documento">
+                            id="documento"
+                            name="documento"
+                        >
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Teléfono</label>
+                        <label class="form-label" for="telefono">Teléfono</label>
                         <input
                             class="form-control"
-                            name="telefono">
+                            id="telefono"
+                            name="telefono"
+                        >
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Dirección</label>
+                        <label class="form-label" for="direccion">Dirección</label>
                         <input
                             class="form-control"
-                            name="direccion">
+                            id="direccion"
+                            name="direccion"
+                        >
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Municipio</label>
+                        <label class="form-label" for="municipio">Municipio</label>
                         <input
                             class="form-control"
+                            id="municipio"
                             name="municipio"
-                            value="San Andrés de Tumaco">
+                            value="San Andrés de Tumaco"
+                        >
                     </div>
 
-                    <button class="btn btn-cacao w-100">
+                    <button type="submit" class="btn btn-cacao w-100">
                         Guardar productor
                     </button>
 
@@ -66,13 +76,19 @@
     <div class="col-md-8">
 
         <form class="d-flex mb-3" method="get">
+            <label class="visually-hidden" for="buscar_productor">
+                Buscar por nombre o documento
+            </label>
+
             <input
                 class="form-control me-2"
+                id="buscar_productor"
                 name="buscar"
                 placeholder="Buscar por nombre o documento"
-                value="{{ buscar }}">
+                value="{{ buscar }}"
+            >
 
-            <button class="btn btn-outline-cacao">
+            <button type="submit" class="btn btn-outline-cacao">
                 Buscar
             </button>
         </form>
@@ -83,11 +99,11 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Documento</th>
-                            <th>Teléfono</th>
-                            <th>Municipio</th>
-                            <th>Acciones</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Municipio</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
@@ -103,7 +119,8 @@
 
                                 <a
                                     class="btn btn-sm btn-outline-cacao"
-                                    href="{{ url_for('main.editar_productor', productor_id=productor.id) }}">
+                                    href="{{ url_for('main.editar_productor', productor_id=productor.id) }}"
+                                >
                                     Editar
                                 </a>
 
@@ -111,12 +128,11 @@
                                 <form
                                     method="post"
                                     action="{{ url_for('main.eliminar_productor', productor_id=productor.id) }}"
-                                    onsubmit="return confirm('¿Está seguro de eliminar este productor? También se eliminarán sus fincas, recepciones, lotes y todos los datos asociados. Esta acción no se puede deshacer.');">
-
-                                    <button class="btn btn-sm btn-outline-danger">
+                                    onsubmit="return confirm('¿Está seguro de eliminar este productor? También se eliminarán sus fincas, recepciones, lotes y todos los datos asociados. Esta acción no se puede deshacer.');"
+                                >
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
                                         Eliminar
                                     </button>
-
                                 </form>
                                 {% endif %}
 

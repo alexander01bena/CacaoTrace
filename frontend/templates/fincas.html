@@ -4,20 +4,77 @@
 <h1 class="h3 fw-bold mb-3">Fincas o unidades productivas</h1>
 <div class="row g-4">
     <div class="col-md-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white fw-bold">Registrar finca</div>
-            <div class="card-body">
-                <form method="post">
-                    <div class="mb-3"><label class="form-label">Nombre finca</label><input class="form-control" name="nombre" required></div>
-                    <div class="mb-3"><label class="form-label">Productor</label><select class="form-select" name="productor_id" required><option value="">Seleccione...</option>{% for productor in productores %}<option value="{{ productor.id }}">{{ productor.nombres }}</option>{% endfor %}</select></div>
-                    <div class="mb-3"><label class="form-label">Vereda</label><input class="form-control" name="vereda"></div>
-                    <div class="mb-3"><label class="form-label">Municipio</label><input class="form-control" name="municipio" value="San Andrés de Tumaco"></div>
-                    <div class="mb-3"><label class="form-label">Hectáreas</label><input class="form-control" type="number" step="0.01" name="hectareas"></div>
-                    <button class="btn btn-cacao w-100">Guardar finca</button>
-                </form>
-            </div>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold">Registrar finca</div>
+
+        <div class="card-body">
+            <form method="post">
+
+                <div class="mb-3">
+                    <label class="form-label" for="nombre">Nombre finca</label>
+                    <input
+                        class="form-control"
+                        id="nombre"
+                        name="nombre"
+                        required
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="productor_id">Productor</label>
+                    <select
+                        class="form-select"
+                        id="productor_id"
+                        name="productor_id"
+                        required
+                    >
+                        <option value="">Seleccione...</option>
+                        {% for productor in productores %}
+                        <option value="{{ productor.id }}">
+                            {{ productor.nombres }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="vereda">Vereda</label>
+                    <input
+                        class="form-control"
+                        id="vereda"
+                        name="vereda"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="municipio">Municipio</label>
+                    <input
+                        class="form-control"
+                        id="municipio"
+                        name="municipio"
+                        value="San Andrés de Tumaco"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="hectareas">Hectáreas</label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        step="0.01"
+                        id="hectareas"
+                        name="hectareas"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-cacao w-100">
+                    Guardar finca
+                </button>
+
+            </form>
         </div>
     </div>
+</div>
     <div class="col-md-8">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white fw-bold">Fincas registradas</div>

@@ -2,14 +2,66 @@
 {% block title %}Editar movimiento - CacaoTrace{% endblock %}
 {% block content %}
 <h1 class="h3 fw-bold mb-3">Editar movimiento de inventario</h1>
+
 <div class="card shadow-sm border-0">
     <div class="card-body">
         <form method="post" class="row g-3">
-            <div class="col-md-4"><label class="form-label">Lote</label><input class="form-control" value="{{ movimiento.lote.codigo }}" disabled></div>
-            <div class="col-md-4"><label class="form-label">Tipo</label><select class="form-select" name="tipo" required>{% for t in ['Entrada','Salida','Ajuste'] %}<option value="{{ t }}" {% if movimiento.tipo == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label class="form-label">Cantidad kg</label><input class="form-control" type="number" step="0.01" min="0.01" name="cantidad_kg" value="{{ movimiento.cantidad_kg }}" required></div>
-            <div class="col-12"><label class="form-label">Motivo</label><input class="form-control" name="motivo" value="{{ movimiento.motivo or '' }}"></div>
-            <div class="col-12"><button class="btn btn-cacao">Actualizar movimiento</button><a class="btn btn-outline-secondary" href="{{ url_for('main.inventario') }}">Cancelar</a></div>
+
+            <div class="col-md-4">
+                <label class="form-label" for="lote_codigo">Lote</label>
+                <input
+                    class="form-control"
+                    id="lote_codigo"
+                    value="{{ movimiento.lote.codigo }}"
+                    disabled
+                >
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" for="tipo">Tipo</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                    {% for t in ['Entrada','Salida','Ajuste'] %}
+                    <option value="{{ t }}" {% if movimiento.tipo == t %}selected{% endif %}>
+                        {{ t }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" for="cantidad_kg">Cantidad kg</label>
+                <input
+                    class="form-control"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    id="cantidad_kg"
+                    name="cantidad_kg"
+                    value="{{ movimiento.cantidad_kg }}"
+                    required
+                >
+            </div>
+
+            <div class="col-12">
+                <label class="form-label" for="motivo">Motivo</label>
+                <input
+                    class="form-control"
+                    id="motivo"
+                    name="motivo"
+                    value="{{ movimiento.motivo or '' }}"
+                >
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-cacao">
+                    Actualizar movimiento
+                </button>
+
+                <a class="btn btn-outline-secondary" href="{{ url_for('main.inventario') }}">
+                    Cancelar
+                </a>
+            </div>
+
         </form>
     </div>
 </div>

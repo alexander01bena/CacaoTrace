@@ -219,11 +219,33 @@ a { text-decoration: none; }
 
 .hero-card {
     position: relative;
+    overflow: hidden;
     padding: 28px;
-    color: #fff;
-    background:
-        linear-gradient(135deg, rgba(50,23,12,.95), rgba(111,61,30,.88)),
-        radial-gradient(circle at top right, rgba(212,160,23,.32), transparent 18rem);
+    color: #ffffff;
+    background-color: #1c0c06;
+}
+
+.hero-card h1,
+.hero-card h2,
+.hero-card h3,
+.hero-card h4,
+.hero-card h5,
+.hero-card h6,
+.hero-card p,
+.hero-card span,
+.hero-card small,
+.hero-card strong {
+    color: #ffffff;
+}
+
+.hero-card .text-muted,
+.hero-card .text-secondary {
+    color: #f7e6d0 !important;
+}
+
+.hero-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-card::after {
@@ -233,8 +255,17 @@ a { text-decoration: none; }
     width: 170px;
     height: 170px;
     border-radius: 50%;
+    background-color: rgba(212, 160, 23, 0.08);
+    z-index: 0;
+    pointer-events: none;
+
     border: 32px solid rgba(255,255,255,.06);
 }
+
+
+
+
+
 
 .hero-card h1,
 .page-title h1 {
@@ -465,15 +496,15 @@ a { text-decoration: none; }
 .feature-pill {
     padding: 12px 14px;
     border-radius: 17px;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.16);
-    color: rgba(255,255,255,.88);
+    background-color: #ffffff;
+    border: 1px solid #d8c5b5;
+    color: #2b1308;
     font-weight: 650;
 }
 
 .kpi-row {
-    display:grid;
-    grid-template-columns: repeat(4, minmax(0,1fr));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
 

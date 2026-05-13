@@ -1,23 +1,77 @@
 {% extends 'base.html' %}
 {% block title %}Inventario - CacaoTrace{% endblock %}
 {% block content %}
-<h1 class="h3 fw-bold mb-3">Inventario de lotes</h1>
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white fw-bold">Registrar movimiento</div>
-            <div class="card-body">
-                <form method="post">
-                    <div class="mb-3"><label class="form-label">Lote</label><select class="form-select" name="lote_id" required><option value="">Seleccione...</option>{% for lote in lotes %}<option value="{{ lote.id }}">{{ lote.codigo }} - {{ lote.cantidad_actual_kg }} kg</option>{% endfor %}</select></div>
-                    <div class="mb-3"><label class="form-label">Tipo</label><select class="form-select" name="tipo" required><option>Entrada</option><option>Salida</option><option>Ajuste</option></select></div>
-                    <div class="mb-3"><label class="form-label">Cantidad kg</label><input class="form-control" type="number" step="0.01" min="0.01" name="cantidad_kg" required></div>
-                    <div class="mb-3"><label class="form-label">Motivo</label><input class="form-control" name="motivo" placeholder="Venta, ajuste, merma, devolución..."></div>
-                    <button class="btn btn-cacao w-100">Guardar movimiento</button>
-                </form>
-            </div>
+<div class="col-md-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold">Registrar movimiento</div>
+
+        <div class="card-body">
+            <form method="post">
+
+                <div class="mb-3">
+                    <label class="form-label" for="movimiento_lote_id">Lote</label>
+                    <select
+                        class="form-select"
+                        id="movimiento_lote_id"
+                        name="lote_id"
+                        required
+                    >
+                        <option value="">Seleccione...</option>
+                        {% for lote in lotes %}
+                        <option value="{{ lote.id }}">
+                            {{ lote.codigo }} - {{ lote.cantidad_actual_kg }} kg
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="movimiento_tipo">Tipo</label>
+                    <select
+                        class="form-select"
+                        id="movimiento_tipo"
+                        name="tipo"
+                        required
+                    >
+                        <option value="Entrada">Entrada</option>
+                        <option value="Salida">Salida</option>
+                        <option value="Ajuste">Ajuste</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="movimiento_cantidad_kg">Cantidad kg</label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        id="movimiento_cantidad_kg"
+                        name="cantidad_kg"
+                        required
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="movimiento_motivo">Motivo</label>
+                    <input
+                        class="form-control"
+                        id="movimiento_motivo"
+                        name="motivo"
+                        placeholder="Venta, ajuste, merma, devolución..."
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-cacao w-100">
+                    Guardar movimiento
+                </button>
+
+            </form>
         </div>
     </div>
-    <div class="col-md-8">
+</div>
+
+<div class="col-md-8">
         <div class="card shadow-sm border-0 mb-3">
             <div class="card-header bg-white fw-bold">Lotes disponibles</div>
             <div class="table-responsive">
