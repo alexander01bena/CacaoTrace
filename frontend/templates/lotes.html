@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Lotes - CacaoTrace{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Lotes de cacao</h1>
+<form method="get" class="card card-body shadow-sm border-0 mb-3">
+    <div class="row g-2">
+        <div class="col-md-5"><input class="form-control" name="buscar" placeholder="Buscar código" value="{{ buscar }}"></div>
+        <div class="col-md-4"><select class="form-select" name="estado"><option value="">Todos los estados</option>{% for e in estados %}<option value="{{ e }}" {% if e == estado %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div>
+        <div class="col-md-3"><button class="btn btn-outline-cacao w-100">Filtrar</button></div>
+    </div>
+</form>
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Código</th><th>Productor</th><th>Finca</th><th>Kg inicial</th><th>Kg actual</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+            {% for lote in lotes %}
+                <tr>
+                    <td><strong>{{ lote.codigo }}</strong></td>
+                    <td>{{ lote.productor.nombres }}</td>
+                    <td>{{ lote.finca.nombre }}</td>
+                    <td>{{ lote.cantidad_inicial_kg }}</td>
+                    <td>{{ lote.cantidad_actual_kg }}</td>
+                    <td><span class="badge bg-secondary">{{ lote.estado }}</span></td>
+                    <td class="d-flex flex-wrap gap-1">
+                        <a class="btn btn-sm btn-outline-cacao" href="{{ url_for('main.detalle_lote', lote_id=lote.id) }}">Detalle</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.editar_lote', lote_id=lote.id) }}">Editar</a>
+                        {% if current_user.role.name == 'administrador' %}
+                        <form method="post" action="{{ url_for('main.eliminar_lote', lote_id=lote.id) }}" onsubmit="return confirm('¿Eliminar este lote? También se eliminará la recepción asociada, calidad, poscosecha e inventario.');">
+                            <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No hay lotes registrados.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

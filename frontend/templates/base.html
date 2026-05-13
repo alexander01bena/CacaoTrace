@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CacaoTrace Tumaco{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body class="app-body">
+{% if current_user.is_authenticated %}
+<div class="layout">
+    <aside class="sidebar">
+        <a class="brand" href="{{ url_for('main.dashboard') }}">
+            <span class="brand-icon"><i class="bi bi-box-seam"></i></span>
+            <span>
+                <strong>CacaoTrace</strong>
+                <small>Tumaco</small>
+            </span>
+        </a>
+
+        <div class="user-panel">
+            <div class="avatar">{{ current_user.username[:1]|upper }}</div>
+            <div>
+                <strong>{{ current_user.username }}</strong>
+                <small>{{ current_user.role.name|capitalize }}</small>
+            </div>
+        </div>
+
+        <strong>{{ current_user.username }}</strong>
+<small>{{ current_user.role.name|capitalize }}</small>
+</div>
+</div>
+
+<nav class="menu" aria-label="Menú principal">
+    <a class="menu-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}">
+        <i class="bi bi-speedometer2"></i> Panel
+    </a>
+
+    {% if current_user.role.name in ['administrador', 'recepcion'] %}
+    <a class="menu-link {% if request.endpoint in ['main.productores', 'main.editar_productor'] %}active{% endif %}" href="{{ url_for('main.productores') }}">
+        <i class="bi bi-people"></i> Productores
+    </a>
+    {% endif %}
+</nav>
+
+        <div class="sidebar-footer">
+            <a class="btn btn-light w-100" href="{{ url_for('main.logout') }}">
+                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+            </a>
+        </div>
+    </aside>
+
+    <section class="content-area">
+        <header class="topbar">
+            <div>
+                <span class="eyebrow">Sistema académico de trazabilidad</span>
+                <h2>CacaoTrace Tumaco</h2>
+            </div>
+
+            <div class="topbar-actions">
+                <a class="btn btn-outline-cacao" href="{{ url_for('main.consultar_lote') }}">
+                    <i class="bi bi-search"></i> Consultar lote
+                </a>
+
+                <a class="btn btn-cacao" href="{{ url_for('main.recepciones') if current_user.role.name in ['administrador', 'recepcion'] else url_for('main.lotes') }}">
+                    <i class="bi bi-plus-circle"></i> Nuevo registro
+                </a>
+            </div>
+        </header>
+<main class="main-content">
+{% else %}
+<main class="public-wrapper">
+    <nav class="public-nav" aria-label="Navegación pública">
+        <a class="brand public-brand" href="{{ url_for('main.login') }}">
+            <span class="brand-icon"><i class="bi bi-box-seam"></i></span>
+            <span>
+                <strong>CacaoTrace</strong>
+                <small>Tumaco</small>
+            </span>
+        </a>
+
+        <a class="btn btn-outline-light" href="{{ url_for('main.consultar_lote') }}">
+            <i class="bi bi-search"></i> Consultar lote
+        </a>
+    </nav>
+
+    <div class="public-content">
+{% endif %}
+
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% if mensajes %}
+                    <div class="flash-stack {% if not current_user.is_authenticated %}public-flash{% endif %}">
+                    {% for categoria, mensaje in mensajes %}
+                        <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+                            {{ mensaje }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+
+{% if current_user.is_authenticated %}
+        </main>
+    </section>
+</div>
+{% else %}
+    </div>
+</main>
+{% endif %}
+
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

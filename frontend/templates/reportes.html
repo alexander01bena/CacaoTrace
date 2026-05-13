@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Reportes - CacaoTrace{% endblock %}
+
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Reportes de lotes</h1>
+
+<form class="card card-body shadow-sm border-0 mb-3" method="get">
+    <div class="row g-2">
+
+        <div class="col-md-3">
+            <label class="form-label" for="productor_id">Productor</label>
+            <select class="form-select" id="productor_id" name="productor_id">
+                <option value="">Todos</option>
+                {% for p in productores %}
+                <option value="{{ p.id }}" {% if filtros.get('productor_id') == p.id|string %}selected{% endif %}>
+                    {{ p.nombres }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label" for="estado">Estado</label>
+            <select class="form-select" id="estado" name="estado">
+                <option value="">Todos</option>
+                {% for e in estados %}
+                <option value="{{ e }}" {% if filtros.get('estado') == e %}selected{% endif %}>
+                    {{ e }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label" for="clasificacion">Calidad</label>
+            <select class="form-select" id="clasificacion" name="clasificacion">
+                <option value="">Todas</option>
+                {% for c in clasificaciones %}
+                <option value="{{ c }}" {% if filtros.get('clasificacion') == c %}selected{% endif %}>
+                    {{ c }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label" for="fecha_inicio">Desde</label>
+            <input
+                class="form-control"
+                type="date"
+                id="fecha_inicio"
+                name="fecha_inicio"
+                value="{{ filtros.get('fecha_inicio', '') }}"
+            >
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label" for="fecha_fin">Hasta</label>
+            <input
+                class="form-control"
+                type="date"
+                id="fecha_fin"
+                name="fecha_fin"
+                value="{{ filtros.get('fecha_fin', '') }}"
+            >
+        </div>
+
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-cacao w-100">
+                Ver
+            </button>
+        </div>
+
+    </div>
+</form>
+
+<div class="alert alert-info">
+    Total disponible según filtros:
+    <strong>{{ '%.2f'|format(total_kg) }} kg</strong>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Productor</th>
+                    <th scope="col">Finca</th>
+                    <th scope="col">Kg actual</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Última calidad</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lote in lotes %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('main.detalle_lote', lote_id=lote.id) }}">
+                            {{ lote.codigo }}
+                        </a>
+                    </td>
+                    <td>{{ lote.productor.nombres }}</td>
+                    <td>{{ lote.finca.nombre }}</td>
+                    <td>{{ lote.cantidad_actual_kg }}</td>
+                    <td>{{ lote.estado }}</td>
+                    <td>
+                        {% if lote.controles_calidad %}
+                            {{ lote.controles_calidad[-1].clasificacion }}
+                        {% else %}
+                            Sin calidad
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No hay resultados para los filtros seleccionados.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
