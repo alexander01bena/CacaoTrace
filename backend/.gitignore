@@ -1,0 +1,27 @@
+# Entorno virtual y dependencias instaladas
+venv/
+.env
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Cachés y pruebas
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Bases de datos locales o temporales
+*.db
+*.sqlite3
+instance/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
