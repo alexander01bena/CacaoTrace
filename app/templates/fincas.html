@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Fincas - CacaoTrace{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Fincas o unidades productivas</h1>
+<div class="row g-4">
+    <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold">Registrar finca</div>
+
+        <div class="card-body">
+            <form method="post">
+
+                <div class="mb-3">
+                    <label class="form-label" for="nombre">Nombre finca</label>
+                    <input
+                        class="form-control"
+                        id="nombre"
+                        name="nombre"
+                        required
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="productor_id">Productor</label>
+                    <select
+                        class="form-select"
+                        id="productor_id"
+                        name="productor_id"
+                        required
+                    >
+                        <option value="">Seleccione...</option>
+                        {% for productor in productores %}
+                        <option value="{{ productor.id }}">
+                            {{ productor.nombres }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="vereda">Vereda</label>
+                    <input
+                        class="form-control"
+                        id="vereda"
+                        name="vereda"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="municipio">Municipio</label>
+                    <input
+                        class="form-control"
+                        id="municipio"
+                        name="municipio"
+                        value="San Andrés de Tumaco"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="hectareas">Hectáreas</label>
+                    <input
+                        class="form-control"
+                        type="number"
+                        step="0.01"
+                        id="hectareas"
+                        name="hectareas"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-cacao w-100">
+                    Guardar finca
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Fincas registradas</div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Finca</th><th>Productor</th><th>Vereda</th><th>Municipio</th><th>Ha</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                    {% for finca in fincas %}
+                        <tr>
+                            <td>{{ finca.nombre }}</td><td>{{ finca.productor.nombres }}</td><td>{{ finca.vereda or 'Sin dato' }}</td><td>{{ finca.municipio }}</td><td>{{ finca.hectareas or '-' }}</td>
+                            <td class="d-flex gap-1">
+                                <a class="btn btn-sm btn-outline-cacao" href="{{ url_for('main.editar_finca', finca_id=finca.id) }}">Editar</a>
+                                {% if current_user.role.name == 'administrador' %}
+                                <form method="post" action="{{ url_for('main.eliminar_finca', finca_id=finca.id) }}" onsubmit="return confirm('¿Eliminar esta finca? Solo se permite si no tiene datos asociados.');">
+                                    <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="6" class="text-center text-muted py-4">No hay fincas registradas.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

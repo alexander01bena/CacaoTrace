@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Detalle del lote{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Lote {{ lote.codigo }}</h1>
+        <p class="text-muted mb-0">Consulta completa de trazabilidad básica.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('main.editar_lote', lote_id=lote.id) }}">Editar lote</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('main.lotes') }}">Volver</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-4"><div class="card shadow-sm border-0"><div class="card-body"><small class="text-muted">Productor</small><h5>{{ lote.productor.nombres }}</h5></div></div></div>
+    <div class="col-md-4"><div class="card shadow-sm border-0"><div class="card-body"><small class="text-muted">Finca</small><h5>{{ lote.finca.nombre }}</h5></div></div></div>
+    <div class="col-md-4"><div class="card shadow-sm border-0"><div class="card-body"><small class="text-muted">Estado</small><h5>{{ lote.estado }}</h5></div></div></div>
+</div>
+
+<div class="card shadow-sm border-0 mb-3">
+    <div class="card-header bg-white fw-bold">Información general</div>
+    <div class="card-body row g-3">
+        <div class="col-md-3"><strong>Kg inicial:</strong><br>{{ lote.cantidad_inicial_kg }}</div>
+        <div class="col-md-3"><strong>Kg actual:</strong><br>{{ lote.cantidad_actual_kg }}</div>
+        <div class="col-md-3"><strong>Fecha creación:</strong><br>{{ lote.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
+        <div class="col-md-3"><strong>Recepción:</strong><br>{{ lote.recepcion.fecha_recepcion if lote.recepcion else 'Sin recepción' }}</div>
+    </div>
+</div>
+
+<div class="mb-3 d-flex flex-wrap gap-2">
+    {% if current_user.is_authenticated and current_user.role.name in ['administrador', 'calidad'] %}
+    <a class="btn btn-cacao" href="{{ url_for('main.registrar_calidad', lote_id=lote.id) }}">Registrar calidad</a>
+    <a class="btn btn-outline-cacao" href="{{ url_for('main.registrar_poscosecha', lote_id=lote.id) }}">Registrar poscosecha</a>
+    {% endif %}
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-bold">Controles de calidad</div>
+            <div class="card-body">
+                {% for control in lote.controles_calidad %}
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <strong>{{ control.clasificacion }}</strong> - Humedad: {{ control.humedad }}%<br>
+                            <span class="text-muted">Estado grano: {{ control.estado_grano }}</span><br>
+                            <small>{{ control.observaciones or 'Sin observaciones' }}</small>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.editar_calidad', control_id=control.id) }}">Editar</a>
+                            {% if current_user.role.name == 'administrador' %}
+                            <form method="post" action="{{ url_for('main.eliminar_calidad', control_id=control.id) }}" onsubmit="return confirm('¿Eliminar este control de calidad?');">
+                                <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}<p class="text-muted">No hay controles registrados.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-bold">Proceso poscosecha</div>
+            <div class="card-body">
+                {% for proceso in lote.procesos_poscosecha %}
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <strong>{{ proceso.estado_proceso }}</strong><br>
+                            Fermentación: {{ proceso.fermentacion }}<br>
+                            Secado: {{ proceso.secado }}<br>
+                            <small>{{ proceso.observaciones or 'Sin observaciones' }}</small>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.editar_poscosecha', proceso_id=proceso.id) }}">Editar</a>
+                            {% if current_user.role.name == 'administrador' %}
+                            <form method="post" action="{{ url_for('main.eliminar_poscosecha', proceso_id=proceso.id) }}" onsubmit="return confirm('¿Eliminar este proceso poscosecha?');">
+                                <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}<p class="text-muted">No hay procesos registrados.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-3">
+    <div class="card-header bg-white fw-bold">Movimientos de inventario</div>
+    <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+            <thead><tr><th>Fecha</th><th>Tipo</th><th>Kg</th><th>Motivo</th><th>Acciones</th></tr></thead>
+            <tbody>
+            {% for mov in lote.movimientos %}
+            <tr>
+                <td>{{ mov.fecha_movimiento.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ mov.tipo }}</td><td>{{ mov.cantidad_kg }}</td><td>{{ mov.motivo }}</td>
+                <td class="d-flex gap-1">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.editar_movimiento', movimiento_id=mov.id) }}">Editar</a>
+                    {% if current_user.role.name == 'administrador' %}
+                    <form method="post" action="{{ url_for('main.eliminar_movimiento', movimiento_id=mov.id) }}" onsubmit="return confirm('¿Eliminar este movimiento? Se recalculará el inventario.');">
+                        <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}<tr><td colspan="5" class="text-muted text-center">Sin movimientos.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
